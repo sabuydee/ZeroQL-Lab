@@ -1,0 +1,12 @@
+{
+  "name": "zeroqllab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pull-schema": "dotnet zeroql schema pull --url https://spacex-production.up.railway.app"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

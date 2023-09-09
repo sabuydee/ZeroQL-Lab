@@ -1,0 +1,58 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<PageTitle>SpaceX</PageTitle>
+
+<h1>SpaceX</h1>
+
+@if (items == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Company</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>@item.Item1</td>
+                <td>@item.Item2</td>
+                <td>@item.Item3</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<(string?, string?, string?)> items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri("https://graphql.api.apollographql.com/api/graphql");
+
+        var client = new ZeroQLClient(httpClient);
+
+        var res = await client.Query(q =>
+            q.Rockets(10, 0, s => new
+            {
+                s.Name,
+                s.Company,
+                s.Description
+            }));
+
+        items = res.Data.Select(s => (s.Name, s.Company, s.Description)).ToList();
+    }
+
+}
